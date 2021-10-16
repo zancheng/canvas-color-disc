@@ -1,6 +1,6 @@
 {
   "name": "canvas-color-disc",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Color disc realized by canvas",
   "private": false,
   "main": "src/index.js",
@@ -22,9 +22,7 @@
   ],
   "author": "chengzan",
   "license": "MIT",
-  "dependencies": {
-    "vue": "^2.5.9"
-  },
+  "dependencies": {},
   "devDependencies": {},
   "engines": {
     "node": ">= 6.0.0",
