@@ -1,0 +1,42 @@
+{
+  "name": "canvas-color-disc",
+  "version": "1.0.7",
+  "description": "Color disc realized by canvas",
+  "private": false,
+  "main": "dist/canvas-color-disc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
+    "lintfix": "eslint --fix --ext .js,.vue src test/unit test/e2e/specs",
+    "build": "node build/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zancheng/canvas-color-disc.git"
+  },
+  "keywords": [
+    "canvas",
+    "color",
+    "disc"
+  ],
+  "author": "chengzan",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.5.9"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "bugs": {
+    "url": "https://github.com/zancheng/canvas-color-disc/issues"
+  },
+  "homepage": "https://github.com/zancheng/canvas-color-disc#readme"
+}

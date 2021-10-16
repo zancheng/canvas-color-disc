@@ -2,31 +2,10 @@
  * @Descripttion: 
  * @version: 
  * @Author: chengzan
- * @Date: 2021-10-16 15:40:48
+ * @Date: 2021-10-16 10:32:19
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-10-16 17:04:00
+ * @LastEditTime: 2021-10-16 15:50:58
 -->
-# production
-
-> 一个Vue的canvas色盘选择组件,支持移动端和PC端
-
-
-![avatar](https://udfs.unisiot.com/group1/M00/03/85/rBEBA2FqlXOAfw1hAAECEWBl9Kc837.png)
-
-<img src="https://udfs.unisiot.com/group1/M00/03/85/rBEBA2FqlXOAfw1hAAECEWBl9Kc837.png" width="50%">
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-```
-
-``` bash
-# serve examples at localhost:8080
-npm run start
-```
-
-```vue
 <template>
     <div id="app">
         <p>RGB: {{RGB}}</p>
@@ -42,12 +21,12 @@ npm run start
 </template>
 
 <script>
-import CanvasColorDisc from './components/CanvasColorDisc.vue'
+// import CanvasColorDisc from './components/CanvasColorDisc.vue'
 export default {
     name: 'App',
-    components: {
-        CanvasColorDisc,
-    },
+    // components: {
+    //     CanvasColorDisc,
+    // },
     data() {
         return {
             RGB: { r: 255, g:255, b:255 },
@@ -72,5 +51,3 @@ export default {
         font-family: "Microsoft Sans Serif", Arial, Helvetica, sans-serif
     }
 </style>
-```
-
