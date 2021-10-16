@@ -1,9 +1,9 @@
 {
   "name": "canvas-color-disc",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Color disc realized by canvas",
   "private": false,
-  "main": "dist/canvas-color-disc.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
