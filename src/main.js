@@ -10,12 +10,12 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 //main.js中引入
-import canvasColorDisc from 'canvasColorDisc'
+import CanvasColorDisc from './index'
 import App from './App'
 
 Vue.config.productionTip = false
 
-Vue.use(canvasColorDisc);
+Vue.use(CanvasColorDisc)
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

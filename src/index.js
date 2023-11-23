@@ -13,6 +13,7 @@ CanvasColorDisc.install = Vue => {
     if (!Vue) {
         window.Vue = Vue = _Vue
     }
+    window.console.log(CanvasColorDisc.name)
     Vue.component(CanvasColorDisc.name, CanvasColorDisc)
 }
 export default CanvasColorDisc

@@ -56,11 +56,9 @@ export default {
     },
     methods: {
         change(newRgb, utils) {
-            console.log('change---', newRgb, utils)
             this.RGB = newRgb
         },
         changing(newRgb, utils) {
-            console.log('changing---', newRgb, utils)
             this.changingRGB = JSON.stringify(newRgb)
         },
     },

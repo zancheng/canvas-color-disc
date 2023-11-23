@@ -21,23 +21,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
-    proxy: {
-      '/api': {
-        target: 'http://dev2.unisiot.com:53804',// 要跨域的域名
-        // target: 'http://192.168.33.58:53339',// 要跨域的域名
-        changeOrigin: true, // 是否开启跨域
-        pathRewrite:{
-          '^/api':'/'
-        }
-      },
-      '/file': {
-        target: 'https://dev2filecenter.unisiot.com/putFile',// 要跨域的域名
-        changeOrigin: true, // 是否开启跨域
-        pathRewrite:{
-          '^/file':'/'
-        }
-      }
-    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [

@@ -145,7 +145,6 @@ class Util {
         sins += Math.asin(m);
       }
     }
-    window.console.log(sins,'=========');
     return {
       radian: Math.PI*2 - sins,
       r: r,
@@ -296,7 +295,6 @@ class Util {
     var res = 0;
     $.each(arr, function(i,v){
         var num = hex_change(v);
-      console.log(num)
         res += muti16(num, i);
     });
     return res;
