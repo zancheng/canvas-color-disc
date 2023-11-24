@@ -1,15 +1,18 @@
 <template>
-    <div class="rgb-color" style="width:100%;">
-        <div class="colorPalatte" :class="`colorPalatte${id}`">
-            <canvas
-                class="cans"
-                :width="width"
-                :id="`canvasBg${id}`"
-                :height="height" />
-            <canvas
-                class="cans ids" :width="width" :id="`canvasSelector${id}`" :height="height" @touchmove="handle"
-                @touchend="endhandle" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp" />
-        </div>
+    <div
+        class="canvas-color-disc"
+        :style="{
+            width: `${width}px`,
+            height: `${height}px`,
+        }">
+        <canvas
+            class="canvas-color-canvas"
+            :width="width"
+            :id="`canvasBg${id}`"
+            :height="height" />
+        <canvas
+            class="canvas-color-canvas ids" :width="width" :id="`canvasSelector${id}`" :height="height" @touchmove="handle"
+            @touchend="endhandle" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp" />
     </div>
 </template>
 
@@ -276,27 +279,11 @@ export default {
 </script>
 
 <style scoped>
-.rgb-color {
-  /* border: 1px solid red; */
-  width: 100%;
-  /* height: 100%; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.canvas-color-disc {
   position: relative;
 }
 
-.colorPalatte {
-  /* border: 1px solid red; */
-  position: relative;
-  width: 100%;
-  left: 0;
-  top: 0;
-  /* left: 20%; */
-  /* let */
-}
-
-.cans {
+.canvas-color-canvas {
   position: absolute;
   z-index: 10;
   left: 0;
@@ -304,10 +291,6 @@ export default {
 }
 
 .ids {
-  /* width: 50%;
-   height: 50%; */
-  /* width: 100%;
-   margin:0.35rem auto; */
   z-index: 20;
 }
 </style>
