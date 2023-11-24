@@ -4,7 +4,7 @@ class Util {
   static drawColorDisk (ctx, x, y, r) {
     for (let i = 0; i <= r; i+=0.4) {
       for (let j = 0; j < Math.PI*2; j+= Math.PI/90) {
-        const rgbarr = this.hvStoRGB(j,255,i);
+        const rgbarr = this.hvsToRGB(j,255,i);
         ctx.strokeStyle = 'rgb('+rgbarr.r+','+rgbarr.g+','+rgbarr.b+')';
         ctx.beginPath();
         ctx.arc(x,y,i,-j,-j-Math.PI/90,true);
@@ -13,7 +13,7 @@ class Util {
     }
     return false;
   }
-  static hvStoRGB(hi, vi, si) {
+  static hvsToRGB(hi, vi, si) {
     let h = hi * 180 / Math.PI;
     const rgb = {};
     h = Math.round(h);
@@ -40,7 +40,7 @@ class Util {
       b: rgb.b < 0 ? 0 : Math.round(rgb.b)
     };
   }
-  static RGBtoHvs(r, g, b) {
+  static RGBToHvs(r, g, b) {
     const rgb = {
       r: r,
       g: g,
@@ -71,7 +71,7 @@ class Util {
     return hsb;
   }
   static selectorLocation (rgb) {
-    const hsb = this.RGBtoHvs(rgb.r, rgb.g, rgb.b);
+    const hsb = this.RGBToHvs(rgb.r, rgb.g, rgb.b);
     let r = hsb.s;
     let h =360 - hsb.h;
     let y = Math.sin(h * Math.PI/180)*r;
@@ -92,7 +92,7 @@ class Util {
     return { x: x, y: y };
   }
   static rMax (rgb) {
-    const hsb = this.RGBtoHvs(rgb.r, rgb.g, rgb.b);
+    const hsb = this.RGBToHvs(rgb.r, rgb.g, rgb.b);
     let r = hsb.s;
     let h =360-hsb.h;
     let y = Math.sin(h * Math.PI/180)*r;
@@ -153,7 +153,7 @@ class Util {
   }
 
   // rgb转16进制
-  static rgbToHex (color){
+  static RGBToHex (color){
     if(color.indexOf("#") != -1) {
       return color;
     }
@@ -166,7 +166,7 @@ class Util {
     return value.slice(1);
   }
 
-  static hexTorgb (hex){
+  static hexToRGB (hex){
     var hexNum = hex;
     var rgb = {};
     hexNum = '0x' + (hexNum.length < 6 ? repeatLetter(hexNum, 2) : hexNum);
@@ -190,7 +190,7 @@ class Util {
         return result;
     }
 }
-  static rgbToHsv (arr){
+  static RGBToHsv (arr){
     var h = 0, s = 0, v = 0;
     var r = arr[0], g = arr[1], b = arr[2];
     arr.sort(function (a, b) {

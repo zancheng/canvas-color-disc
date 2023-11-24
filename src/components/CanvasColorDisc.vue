@@ -1,13 +1,13 @@
 <template>
     <div class="rgb-color" style="width:100%;">
-        <div class="colorPalatte" :class="`colorPalatte${vals}`">
+        <div class="colorPalatte" :class="`colorPalatte${id}`">
             <canvas
                 class="cans"
                 :width="width"
-                :id="`canvasBg${vals}`"
+                :id="`canvasBg${id}`"
                 :height="height" />
             <canvas
-                class="cans ids" :width="width" :id="`canvasSelector${vals}`" :height="height" @touchmove="handle"
+                class="cans ids" :width="width" :id="`canvasSelector${id}`" :height="height" @touchmove="handle"
                 @touchend="endhandle" @mousedown="mouseDown" @mousemove="mouseMove" @mouseup="mouseUp" />
         </div>
     </div>
@@ -20,29 +20,33 @@ import Util from './../uitl.js';
 export default {
   name: 'CanvasColorDisc',
   props: {
-    vals: {
+    // canvas id
+    id: {
       type: String,
       default: '0',
       required: true,
     },
-    rgb: {
+    // 颜色值，可以是rgb的JSON格式，也可以是String
+    color: {
       type: Object,
       default: () => {
         return { r: 255, g: 255, b: 255 };
       },
       required: true,
     },
+    // 画布宽度
     width: {
       type: Number,
       default: window.innerWidth * 0.7, // 画布宽
     },
+    // 画布高度
     height: {
       type: Number,
       default: window.innerWidth * 0.78, // 画布高
     },
   },
   watch: {
-    rgb: {
+    color: {
       handler: function (val) {
         this.r = val.r;
         this.g = val.g;
@@ -77,16 +81,16 @@ export default {
     };
   },
   mounted() {
-    const cpt = window.document.querySelector(`#canvasSelector${this.vals}`);
+    const cpt = window.document.querySelector(`#canvasSelector${this.id}`);
     this.centerX = this.width / 2;
     this.centerY = this.height / 2;
     // this.leftColor = (document.body.clientWidth-this.width)/2;
-    this.canvasBg = window.document.querySelector(`#canvasBg${this.vals}`).getContext('2d');
-    this.cstor = window.document.querySelector(`#canvasSelector${this.vals}`);
-    this.canvasSelector = window.document.querySelector(`#canvasSelector${this.vals}`).getContext('2d');
+    this.canvasBg = window.document.querySelector(`#canvasBg${this.id}`).getContext('2d');
+    this.cstor = window.document.querySelector(`#canvasSelector${this.id}`);
+    this.canvasSelector = window.document.querySelector(`#canvasSelector${this.id}`).getContext('2d');
 
     //解决锯齿
-    var canvas = window.document.querySelector(`#canvasBg${this.vals}`);
+    var canvas = window.document.querySelector(`#canvasBg${this.id}`);
     var width = canvas.width;
     var height = canvas.height;
     if (window.devicePixelRatio) {
@@ -169,11 +173,22 @@ export default {
     },
     mouseMove(e) {
       if (this.mouseStart) {
-        this.endClick(e)
+        e.preventDefault();
+        const xl = e.clientX;
+        const yl = e.clientY;
+        let nx = xl - this.cstor.getBoundingClientRect().left;
+        let ny = yl - this.cstor.getBoundingClientRect().top;
+        this.getRgbbyxy(nx, ny);
       }
     },
     mouseUp(e) {
       this.mouseStart = false;
+      e.preventDefault();
+      const xl = e.clientX;
+      const yl = e.clientY;
+      let nx = xl - this.cstor.getBoundingClientRect().left;
+      let ny = yl - this.cstor.getBoundingClientRect().top;
+      this.getRgbbyxyend(nx, ny);
     },
     endClick(e) {
       e.preventDefault();
@@ -186,7 +201,7 @@ export default {
     getRgbbyxyend(xt, yt) {
       const rad = Util.getSelectorRadians(xt, yt, this.centerX, this.centerY, this.radius);
       if (rad.r > this.radius) return;
-      const rgbs = Util.hvStoRGB(rad.radian, 255, rad.r);
+      const rgbs = Util.hvsToRGB(rad.radian, 255, rad.r);
       if (rad.r < 8) {
         rgbs.r = 255; rgbs.g = 255; rgbs.b = 255;
       }
@@ -209,7 +224,7 @@ export default {
     getRgbbyxy(xt, yt) {
       const rad = Util.getSelectorRadians(xt, yt, this.centerX, this.centerY, this.radius);
       if (rad.r > this.radius) return;
-      const rgbs = Util.hvStoRGB(rad.radian, 255, rad.r);
+      const rgbs = Util.hvsToRGB(rad.radian, 255, rad.r);
       if (rad.r < 8) {
         rgbs.r = 255; rgbs.g = 255; rgbs.b = 255;
       }
