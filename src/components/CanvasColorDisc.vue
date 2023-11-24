@@ -24,15 +24,13 @@ export default {
     id: {
       type: String,
       default: '0',
-      required: true,
     },
     // 颜色值，可以是rgb的JSON格式，也可以是String
     color: {
-      type: Object,
+      type: [Object, String],
       default: () => {
         return { r: 255, g: 255, b: 255 };
       },
-      required: true,
     },
     // 画布宽度
     width: {
@@ -48,9 +46,16 @@ export default {
   watch: {
     color: {
       handler: function (val) {
-        this.r = val.r;
-        this.g = val.g;
-        this.b = val.b;
+        if (typeof val === 'string') {
+          const rgb = Util.hexToRGB(val)
+          this.r = rgb.r;
+          this.g = rgb.g;
+          this.b = rgb.b;
+        } else {
+          this.r = val.r;
+          this.g = val.g;
+          this.b = val.b;
+        }
         this.getRedToXy();
       },
       deep: true,
@@ -113,6 +118,17 @@ export default {
     }
 
     Util.drawColorDisk(this.canvasBg, this.centerX, this.centerY, this.radius);
+
+    if (typeof this.color === 'string') {
+      const rgb = Util.hexToRGB(this.color)
+      this.r = rgb.r;
+      this.g = rgb.g;
+      this.b = rgb.b;
+    } else {
+      this.r = this.color.r;
+      this.g = this.color.g;
+      this.b = this.color.b;
+    }
     this.getRedToXy();
   },
   methods: {
@@ -240,11 +256,11 @@ export default {
         return;
       }
       this.huanxing(this.canvasSelector, xt, yt);
-      this.$emit('changing', {
-        r: this.r,
-        g: this.g,
-        b: this.r,
-      }, Util);
+      // this.$emit('changing', {
+      //   r: this.r,
+      //   g: this.g,
+      //   b: this.r,
+      // }, Util);
     },
     getRedToXy() {
       const objxy = Util.selectorLocation({ r: this.r, g: this.g, b: this.b });

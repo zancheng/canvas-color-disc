@@ -167,6 +167,9 @@ class Util {
   }
 
   static hexToRGB (hex){
+    if(hex.indexOf("#") != -1) {
+      hex = hex.slice(1);
+    }
     var hexNum = hex;
     var rgb = {};
     hexNum = '0x' + (hexNum.length < 6 ? repeatLetter(hexNum, 2) : hexNum);

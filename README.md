@@ -38,14 +38,11 @@ Vue.use(CanvasColorDisc)
     <div id="app">
         <p>RGB: {{RGB}}</p>
         <p>Hex: {{Hex}}</p>
-        <p>changing RGB: {{changingRGB}}</p>
-        <p>changing Hex: {{changingHex}}</p>
         <CanvasColorDisc
             id="0"
             :color="RGB"
             :width="300"
             :height="240"
-            @changing="changing"
             @change="changeColor"></CanvasColorDisc>
     </div>
 </template>
@@ -55,9 +52,8 @@ export default {
     name: 'App',
     data() {
         return {
-            RGB: { r: 255, g:255, b:255 },
-            changingRGB: '',
-            changingHex: '',
+            // RGB: { r: 255, g:255, b:255 },
+            RGB: '#ff0000',
             Hex: '',
         }
     },
@@ -65,10 +61,6 @@ export default {
         changeColor(newRgb, utils) {
             this.RGB = newRgb
             this.Hex = `#${utils.RGBToHex(`(${newRgb.r}, ${newRgb.g}, ${newRgb.b})`)}`.toUpperCase()
-        },
-        changing(newRgb, utils) {
-            this.changingRGB = JSON.stringify(newRgb)
-            this.changingHex = `#${utils.RGBToHex(`(${newRgb.r}, ${newRgb.g}, ${newRgb.b})`)}`.toUpperCase()
         },
     },
 }
@@ -84,7 +76,7 @@ export default {
 | 参数        | 说明    | 类型                                        | 默认值 |
 | ------------- | ----------- | ----------------------------------------------- | ------ |
 | id | canvas id拼接  | String                              | "0" |
-| color | 默认颜色 | Object | {"r": 255, "g": 255, "b": 255} |
+| color | 默认颜色 | Object ｜ String(如："#FF0000") | {"r": 255, "g": 255, "b": 255} |
 | width | canvas画板宽度 |    Number                      | window.innerWidth * 0.7 |
 | height | canvas画板高度 | Number                         | window.innerWidth * 0.78 |
 
@@ -92,5 +84,4 @@ export default {
 
 | 事件        | 说明    | 回调参数 |
 | ------------- | ----------- | ----------------------------------------------- |
-| changing | 滑动选择回调  | rgb: 颜色, Util: 内置util，可以转换颜色（Util.hvsToRGB、Util.RGBToHvs、Util.RGBToHex、Util.hexToRGB、Util.RGBToHsv、Util.hsvToRgb） |
 | change | 选择结束回调 | rgb: 颜色, Util: 内置util，可以转换颜色（Util.hvsToRGB、Util.RGBToHvs、Util.RGBToHex、Util.hexToRGB、Util.RGBToHsv、Util.hsvToRgb） |

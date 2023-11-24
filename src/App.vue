@@ -10,14 +10,11 @@
     <div id="app">
         <p>RGB: {{RGB}}</p>
         <p>Hex: {{Hex}}</p>
-        <p>changing RGB: {{changingRGB}}</p>
-        <p>changing Hex: {{changingHex}}</p>
         <CanvasColorDisc
             id="0"
             :color="RGB"
             :width="300"
             :height="240"
-            @changing="changing"
             @change="changeColor"></CanvasColorDisc>
     </div>
 </template>
@@ -27,9 +24,8 @@ export default {
     name: 'App',
     data() {
         return {
-            RGB: { r: 255, g:255, b:255 },
-            changingRGB: '',
-            changingHex: '',
+            // RGB: { r: 255, g:255, b:255 },
+            RGB: '#ff0000',
             Hex: '',
         }
     },
@@ -37,10 +33,6 @@ export default {
         changeColor(newRgb, utils) {
             this.RGB = newRgb
             this.Hex = `#${utils.RGBToHex(`(${newRgb.r}, ${newRgb.g}, ${newRgb.b})`)}`.toUpperCase()
-        },
-        changing(newRgb, utils) {
-            this.changingRGB = JSON.stringify(newRgb)
-            this.changingHex = `#${utils.RGBToHex(`(${newRgb.r}, ${newRgb.g}, ${newRgb.b})`)}`.toUpperCase()
         },
     },
 }
