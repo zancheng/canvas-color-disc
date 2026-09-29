@@ -3,6 +3,9 @@ node_modules
 /dist
 /unpackage
 /.hbuilderx
+# 遗留的无引用文件（可手动删除）
+/build
+screenshot_*.png
 
 # Editor directories and files
 .idea
