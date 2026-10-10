@@ -10,7 +10,18 @@
       "import": "./dist/canvas-color-disc.es.js",
       "require": "./dist/canvas-color-disc.umd.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./vue2": {
+      "import": "./dist/canvas-color-disc.es.js",
+      "require": "./dist/canvas-color-disc.umd.js"
+    },
+    "./vue3": {
+      "import": "./dist/vue3/canvas-color-disc.es.js",
+      "require": "./dist/vue3/canvas-color-disc.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css",
+    "./vue2/style.css": "./dist/style.css",
+    "./dist/vue3/style.css": "./dist/vue3/style.css",
+    "./vue3/style.css": "./dist/vue3/style.css"
   },
   "style": "dist/style.css",
   "files": [
@@ -23,7 +34,9 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "vite build",
+    "build": "npm run build:vue2 && npm run build:vue3",
+    "build:vue2": "vite build",
+    "build:vue3": "vite build --config vite.config.vue3.js",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue src demo",
     "lintfix": "eslint --fix --ext .js,.vue src demo"
@@ -40,10 +53,11 @@
   "author": "chengzan",
   "license": "MIT",
   "peerDependencies": {
-    "vue": "^2.5.0"
+    "vue": "^2.5.0 || ^3.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue2": "^2.3.1",
+    "@vue/compiler-sfc": "^3.5.13",
     "babel-eslint": "^8.2.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",

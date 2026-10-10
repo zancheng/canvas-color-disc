@@ -20,6 +20,8 @@
 </template>
 
 <script>
+// 样式独立于 SFC，便于 Vue 2 / Vue 3 两次构建共用（构建产物分别为 dist/style.css、dist/vue3/style.css）
+import '../style.css'
 import {
     discToPoint,
     drawColorDisc,
@@ -52,10 +54,16 @@ function isSameRgb(a, b) {
 export default {
     name: 'CanvasColorDisc',
     props: {
-        // 当前颜色 {r, g, b}，支持 v-model
+        // 当前颜色 {r, g, b}，Vue 2 下配合 v-model 使用
         value: {
             type: Object,
             default: () => ({ r: 255, g: 255, b: 255 })
+        },
+        // 当前颜色 {r, g, b}，Vue 3 下配合 v-model 使用
+        // 默认值为 undefined 用于区分「Vue 2 的 value 模式」与「Vue 3 的 modelValue 模式」
+        modelValue: {
+            type: Object,
+            default: undefined
         },
         // 画布宽高（CSS 像素）
         width: {
@@ -69,7 +77,7 @@ export default {
     },
     data() {
         return {
-            rgb: normalizeRgb(this.value),
+            rgb: normalizeRgb(this.activeValue()),
             centerX: 0,
             centerY: 0,
             radius: 0,
@@ -80,10 +88,16 @@ export default {
         value: {
             deep: true,
             handler(val) {
-                if (!isSameRgb(val, this.rgb)) {
-                    this.rgb = normalizeRgb(val)
-                    this.drawSelector()
+                // Vue 3 模式下 value 恒为默认值，忽略
+                if (this.modelValue === undefined) {
+                    this.applyPropValue(val)
                 }
+            }
+        },
+        modelValue: {
+            deep: true,
+            handler(val) {
+                this.applyPropValue(val)
             }
         },
         width() {
@@ -105,17 +119,36 @@ export default {
         }
         this.rebuildCanvas()
     },
+    // Vue 2 生命周期
     beforeDestroy() {
-        if (this.rafId) {
-            cancelAnimationFrame(this.rafId)
-            this.rafId = 0
-        }
-        if (this.canvasResizeObserver) {
-            this.canvasResizeObserver.disconnect()
-            this.canvasResizeObserver = null
-        }
+        this.destroy()
+    },
+    // Vue 3 生命周期（Vue 2 下该选项会被忽略）
+    beforeUnmount() {
+        this.destroy()
     },
     methods: {
+        destroy() {
+            if (this.rafId) {
+                cancelAnimationFrame(this.rafId)
+                this.rafId = 0
+            }
+            if (this.canvasResizeObserver) {
+                this.canvasResizeObserver.disconnect()
+                this.canvasResizeObserver = null
+            }
+        },
+        // Vue 2 用 value，Vue 3 用 modelValue
+        activeValue() {
+            return this.modelValue === undefined ? this.value : this.modelValue
+        },
+        // 外部修改绑定值时同步内部颜色
+        applyPropValue(val) {
+            if (!isSameRgb(val, this.rgb)) {
+                this.rgb = normalizeRgb(val)
+                this.drawSelector()
+            }
+        },
         // 初始化画布尺寸并重绘色盘与选择器
         rebuildCanvas() {
             this.$nextTick(() => {
@@ -127,6 +160,10 @@ export default {
             const dpr = window.devicePixelRatio || 1
             const discCanvas = this.$refs.discCanvas
             const selectorCanvas = this.$refs.selectorCanvas
+            // 挂载后同一 tick 内就被卸载时，nextTick 回调里 $refs 已被清空
+            if (!discCanvas || !selectorCanvas) {
+                return
+            }
             const canvases = [discCanvas, selectorCanvas]
             canvases.forEach((canvas) => {
                 canvas.style.width = this.width + 'px'
@@ -223,7 +260,7 @@ export default {
             this.rafId = requestAnimationFrame(() => {
                 this.rafId = 0
                 this.drawSelector()
-                this.$emit('input', { ...this.rgb })
+                this.emitInput()
             })
         },
         // 立即提交尚未执行的更新（交互结束时调用）
@@ -234,27 +271,14 @@ export default {
             cancelAnimationFrame(this.rafId)
             this.rafId = 0
             this.drawSelector()
-            this.$emit('input', { ...this.rgb })
+            this.emitInput()
+        },
+        // 同时派发 Vue 2 与 Vue 3 的 v-model 事件，未监听的一方会被忽略
+        emitInput() {
+            const rgb = { ...this.rgb }
+            this.$emit('input', rgb)
+            this.$emit('update:modelValue', rgb)
         }
     }
 }
 </script>
-
-<style scoped>
-.canvas-color-disc {
-    position: relative;
-    display: inline-block;
-}
-.disc-canvas {
-    display: block;
-}
-.disc-selector {
-    position: absolute;
-    top: 0;
-    left: 0;
-    cursor: crosshair;
-    touch-action: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-</style>
