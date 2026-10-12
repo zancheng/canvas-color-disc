@@ -121,7 +121,22 @@ export default {
 </script>
 ```
 
-`v-model` binds an RGB object. Updating that object from the parent moves the selector accordingly.
+The shape of the bound value is decided by `format`. Updating it from the parent moves the selector accordingly.
+
+### Color formats
+
+`format` (default `rgb`) decides the shape of the bound value:
+
+| format | Value | Example |
+| --- | --- | --- |
+| `rgb` | `{ r, g, b }`, channels 0~255 | `{ r: 255, g: 0, b: 0 }` |
+| `hex` | string, 3/4/6/8 digits | `'#ff0000'` |
+| `hsv` | `{ h, s, v }`, h 0~360, s/v 0~100 | `{ h: 0, s: 100, v: 100 }` |
+| `hsl` | `{ h, s, l }`, h 0~360, s/l 0~100 | `{ h: 0, s: 100, l: 50 }` |
+
+Strings are always parsed as hex. Objects are parsed with `format` first, and by field names when `format` is not given.
+
+With `alpha` enabled an extra `a` channel (0~1) is read and written, and hex output becomes 8 digits (e.g. `#ff000080`). The disc is two-dimensional, so it does not adjust alpha or value itself — provide them through the bound value or your own controls.
 
 ## API
 
@@ -129,30 +144,75 @@ export default {
 
 | Prop | Description | Type | Default | Vue version |
 | --- | --- | --- | --- | --- |
-| value | Current color, used by `v-model` | Object `{ r, g, b }` | `{ r: 255, g: 255, b: 255 }` | Vue 2 |
-| modelValue | Current color, used by `v-model` | Object `{ r, g, b }` | `undefined` (falls back to `value`) | Vue 3 |
-| width | Canvas width (CSS pixels) | Number | 300 | both |
-| height | Canvas height (CSS pixels) | Number | 300 | both |
+| value | Current color, used by `v-model` | Object / String | `{ r: 255, g: 255, b: 255 }` | Vue 2 |
+| modelValue | Current color, used by `v-model` | Object / String | `undefined` (falls back to `value`) | Vue 3 |
+| width | Canvas width in CSS pixels, `'auto'` follows the container | Number / String | 300 | both |
+| height | Canvas height in CSS pixels, `'auto'` follows the container | Number / String | 300 | both |
+| format | Bound value format: `rgb` / `hex` / `hsv` / `hsl` | String | `rgb` | both |
+| alpha | Keep and emit the alpha channel | Boolean | `false` | both |
+| disabled | Disable pointer and keyboard interaction | Boolean | `false` | both |
+| keyboardStep | Arrow key step (saturation percentage / hue degrees), ×10 with Shift | Number | 1 | both |
 
 ### Events
 
 | Event | Description | Payload | Vue version |
 | --- | --- | --- | --- |
-| input | Fired in real time while the color changes (throttled per frame, used by `v-model`) | `{ r, g, b }` | Vue 2 |
-| update:modelValue | Same as `input`, used by `v-model` | `{ r, g, b }` | Vue 3 |
-| change | Fired when a pick gesture (press then release) ends | `{ r, g, b }` | both |
+| input | Fired in real time while the color changes (throttled per frame, used by `v-model`) | matches `format` | Vue 2 |
+| update:modelValue | Same as `input`, used by `v-model` | matches `format` | Vue 3 |
+| change | Fired when a pick gesture (press then release) or a key adjustment ends | matches `format` | both |
 
 Both `input` and `update:modelValue` are always emitted, so the unused one is simply ignored.
 
+### Slot
+
+| Name | Scope | Description |
+| --- | --- | --- |
+| palette | `color` (current color), `setColor(value)` | Extra area rendered below the disc, typically used for preset swatches |
+
+```vue
+<canvas-color-disc v-model="rgb">
+    <template #palette="{ setColor }">
+        <button @click="setColor({ r: 255, g: 0, b: 0 })">Red</button>
+    </template>
+</canvas-color-disc>
+```
+
+### Instance methods
+
+Available through a `ref` (exposed via `expose` on Vue 3, directly on `$refs` on Vue 2):
+
+| Method | Description |
+| --- | --- |
+| `getColor()` | Returns the current color; objects are returned as copies |
+| `setColor(value)` | Sets the color; the value must match `format`, invalid values are ignored. Also emits `change` |
+| `reset()` | Resets to white |
+
+### Keyboard
+
+The interactive element is focusable (`tabindex="0"`, `role="slider"` with `aria-valuetext`). Once focused:
+
+| Key | Action |
+| --- | --- |
+| ← / → | Hue ∓/± `keyboardStep` degrees |
+| ↑ / ↓ | Saturation ±/∓ `keyboardStep` |
+| Home / End | Saturation to 0 / 100 |
+| Shift + arrows | Step ×10 |
+
 ### Notes
 
-- The disc uses the HSV model: hue comes from the angle, saturation from the distance to the center ratio, value is fixed to maximum, and the center is white
-- `width` / `height` are logical canvas sizes in CSS pixels. The disc radius is `min(width, height) / 2 - 18` and the origin is centered; they do not have to be equal
+- The disc uses the HSV model: hue comes from the angle, saturation from the distance to the center ratio. Value is taken from the bound value and preserved, so passing a gray does not turn it into a fully saturated color
+- `width` / `height` are logical canvas sizes in CSS pixels. The disc radius is the shorter half side minus a proportional padding (clamped to 8~18px) and the origin is centered; they do not have to be equal. The selector ring and the white dead zone at the center scale with the radius too, so tiny and large discs keep the same proportions
 - The canvas is rendered with `devicePixelRatio` scaling, so it stays sharp on high-DPI screens
 - Pointer coordinates are converted back to logical canvas coordinates: even if the canvas is scaled by external CSS (e.g. a global `canvas { max-width: 100% }`, a squeezed parent, or a `transform` scale), the picked position still matches the visual position
 - Clicking or dragging outside the disc pins the selector to the circumference and takes the color at that point
-- Built on Pointer Events, so mouse and touch behave the same; dragging uses `setPointerCapture`, so it continues even when the pointer leaves the canvas
+- Built on Pointer Events, so mouse and touch behave the same; dragging uses `setPointerCapture`, so it continues even when the pointer leaves the canvas, and a window-level fallback ends the gesture if the capture could not be taken
+- Only the primary button / primary pointer starts a pick: right and middle clicks are ignored, and extra fingers in a multi-touch gesture do not take over an ongoing drag
+- The cached canvas rect is invalidated on scroll, so picking stays accurate while the page is scrolled during a drag
+- Passing `'auto'` for `width` / `height` makes the canvas follow its container and redraw on container resizes; the parent needs a definite size on that axis
+- When `devicePixelRatio` changes (dragging the window to another screen, changing the OS scaling), the canvas is rebuilt at the new ratio
+- Disc pixels are cached by geometry, so nothing is recomputed while size and dpr stay the same; the circumference fades over one physical pixel to avoid aliasing
 - Styles are shipped as plain CSS scoped by the `.canvas-color-disc` ancestor selector; import the matching `style.css` once per app
+- `src/index.d.ts` ships with the package, so TS projects get prop and instance method types out of the box
 
 ## Local development
 
@@ -163,12 +223,18 @@ npm install
 # serve the Vue 2 demo at localhost:5173
 npm run dev
 
+# serve the Vue 3 demo at localhost:5174
+npm run dev:vue3
+
 # build both Vue 2 (dist/) and Vue 3 (dist/vue3/) bundles
 npm run build
 
 # build a single target
 npm run build:vue2
 npm run build:vue3
+
+# run the unit tests
+npm test
 ```
 
 ## License
