@@ -1,0 +1,47 @@
+/* 组件样式：独立于 SFC，供 Vue 2 / Vue 3 两次构建共用
+   选择器用后代选择器限定，避免未加 scoped 后影响页面其它元素 */
+.canvas-color-disc {
+    position: relative;
+    display: inline-block;
+}
+
+.canvas-color-disc .disc-surface {
+    position: relative;
+    display: inline-block;
+}
+
+.canvas-color-disc .disc-canvas {
+    display: block;
+}
+
+.canvas-color-disc .disc-selector {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: crosshair;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.canvas-color-disc .disc-surface:focus {
+    outline: none;
+}
+
+.canvas-color-disc .disc-surface:focus-visible {
+    outline: 2px solid #4d90fe;
+    outline-offset: 2px;
+}
+
+/* auto 尺寸下由容器决定画布大小，宽度方向需要撑满父级 */
+.canvas-color-disc.is-disabled {
+    opacity: 0.6;
+}
+
+.canvas-color-disc.is-disabled .disc-selector {
+    cursor: not-allowed;
+}
+
+.canvas-color-disc .disc-palette {
+    margin-top: 8px;
+}
