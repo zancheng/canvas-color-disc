@@ -4,6 +4,9 @@
 
 > A circular color picker built on Canvas, works on both desktop and mobile (Pointer Events). Available as a Vue 2 / Vue 3 component and as a framework-agnostic Web Component / vanilla JS class.
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-online-2ea44f?logo=githubpages&logoColor=white)](https://zancheng.github.io/canvas-color-disc/)
+[![Open in StackBlitz](https://img.shields.io/badge/StackBlitz-Open%20in%20editor-1389FD?logo=stackblitz&logoColor=white)](https://stackblitz.com/github/zancheng/canvas-color-disc)
+
 ![preview](https://cdn.jsdelivr.net/gh/zancheng/canvas-color-disc@main/preview.png)
 
 ## Usage at a glance
@@ -30,6 +33,8 @@ Works in plain HTML, React, Angular and anything else.
 | Script tag (UMD) | `dist/vanilla/canvas-color-disc.umd.js` | global `window.CanvasColorDisc`, auto-registers `<canvas-color-disc>`, zero dependencies |
 
 ### Plain HTML
+
+Prefer to try it first? Open the [live demo](https://zancheng.github.io/canvas-color-disc/) or [edit and run it on StackBlitz](https://stackblitz.com/github/zancheng/canvas-color-disc).
 
 ```html
 <!-- unpkg, pinned to the current version (drop @1.4.0 to always get the latest):
