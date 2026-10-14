@@ -47,7 +47,9 @@ let discCache = null;
  * 相比按角度/半径步进逐条 arc+stroke 的绘制方式（数万次路径调用），
  * 直接写 ImageData 只需一次遍历，性能高一个数量级。
  *
- * 两处优化：色相关于水平轴对称，下半区整行复制即可，省掉一半三角函数与插值；
+ * 每个像素都按自身角度计算色相，不能利用上下镜像整行复制：
+ * HSV 色轮上下镜像点的颜色并不相同（如右侧 0° 红，上方 90° 黄绿、下方 270° 紫），
+ * 复制会让下半区整体变成通道互换的错色。
  * 结果按几何参数缓存，尺寸/dpr 未变时直接 putImageData。
  *
  * 注意：像素坐标为物理像素，dpr 需单独传入。
@@ -72,9 +74,6 @@ export function drawColorDisc(ctx, centerX, centerY, radius, dpr) {
     const rSquared = r * r;
     // 圆周最外一圈按到圆周的距离衰减透明度，抵消逐像素判定带来的锯齿
     const fadeStart = r - 1;
-    // 镜像行下标需为整数，dpr 或尺寸为小数时退回逐像素计算
-    const mirrorBase = cy * 2;
-    const canMirror = mirrorBase === Math.round(mirrorBase);
     // 同一色相下 RGB 各通道与饱和度成线性关系，
     // 预计算一圈纯色（S=100）后按半径比例插值即可，避免逐像素做完整 HSV 转换
     const pureR = new Float32Array(360);
@@ -100,17 +99,6 @@ export function drawColorDisc(ctx, centerX, centerY, radius, dpr) {
         const xEnd = Math.min(width - 1, Math.floor(cx + halfWidth));
         if (xStart > xEnd) {
             continue;
-        }
-        const rowStart = (y * width + xStart) * 4;
-        const rowLength = (xEnd - xStart + 1) * 4;
-        if (canMirror && dy > 0) {
-            const mirrorY = mirrorBase - y;
-            // 镜像行 dy 为负、必先于当前行计算，可直接整段复制
-            if (mirrorY >= 0 && mirrorY < height) {
-                const from = (mirrorY * width + xStart) * 4;
-                data.copyWithin(rowStart, from, from + rowLength);
-                continue;
-            }
         }
         for (let x = xStart; x <= xEnd; x++) {
             const index = (y * width + x) * 4;

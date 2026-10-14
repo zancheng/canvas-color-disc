@@ -65,7 +65,7 @@ export interface CanvasColorDiscExpose {
  * 色盘取色组件
  *
  * Vue 2 与 Vue 3 的 props 完全一致，因此共用一份声明；
- * 区别只在入口路径（`canvas-color-disc` 与 `canvas-color-disc/vue3`）。
+ * 区别只在入口路径（Vue 3 用 `canvas-color-disc`，Vue 2 用 `canvas-color-disc/vue2`）。
  */
 declare const CanvasColorDisc: DefineComponent<CanvasColorDiscProps> & {
     install(app: unknown): void
