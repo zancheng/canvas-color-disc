@@ -33,8 +33,9 @@
 
 ### 变更
 
-- 默认入口 `.` 切换为 Vue 3 构建（`main` / `module` / `style` 字段同步指向 `dist/vue3/`；unpkg 无路径 CDN 地址随之解析为 Vue 3 UMD）；Vue 2 项目改用 `canvas-color-disc/vue2` 引入，非 Vue 项目继续使用 `canvas-color-disc/vanilla`
-- README 的 CDN 引入示例补充 jsDelivr 镜像地址（与 unpkg 二选一）
+- 默认入口 `.` 切换为 Vue 3 构建（`main` / `module` / `style` 字段同步指向 `dist/vue3/`）；Vue 2 项目改用 `canvas-color-disc/vue2` 引入，非 Vue 项目继续使用 `canvas-color-disc/vanilla`
+- `package.json` 新增 `unpkg` / `jsdelivr` 字段，指向零依赖的 `dist/vanilla/canvas-color-disc.umd.js`：两个 CDN 的无路径地址（`https://unpkg.com/canvas-color-disc`、`https://cdn.jsdelivr.net/npm/canvas-color-disc`）由此直接解析为该 UMD 文件
+- README 的 CDN 引入示例补充 unpkg 与 jsDelivr 镜像地址，并给出锁定版本号（`@1.4.0`）的写法
 - 内部状态改为 HSV：明度（V）取自绑定值并原样保留，传入灰色不再被拉成纯色
 - 色盘像素按几何参数缓存，尺寸与 dpr 未变时不重算
 - 选择器圆环预渲染为离屏 sprite，避免每帧重算 `shadowBlur`
