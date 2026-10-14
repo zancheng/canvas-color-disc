@@ -2,6 +2,12 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### 变更
+
+- README（中/英）CDN 示例中的锁定版本更新为 `@1.4.1`
+
 ## [1.4.1] - 2026-10-14
 
 ### 新增

@@ -13,7 +13,7 @@
 
 | Setup | Import | Usage | Styles |
 | --- | --- | --- | --- |
-| Plain HTML | `<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js">` | Render `<canvas-color-disc>` and listen for the `change` event | auto-injected, no CSS import |
+| Plain HTML | `<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js">` | Render `<canvas-color-disc>` and listen for the `change` event | auto-injected, no CSS import |
 | React | `import 'canvas-color-disc/vanilla'` | Same element; JSX props and `onchange` on React 19, a `ref` bridge on React 18 | auto-injected, no CSS import |
 | Vue 2 (`^2.5.0`) | `import CanvasColorDisc from 'canvas-color-disc/vue2'` | `v-model`: `value` / `input` | `canvas-color-disc/dist/style.css` |
 | Vue 3 (`^3.0.0`) | `import CanvasColorDisc from 'canvas-color-disc'` (or `canvas-color-disc/vue3`) | `v-model`: `modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
@@ -37,11 +37,11 @@ Works in plain HTML, React, Angular and anything else.
 Prefer to try it first? Open the [live demo](https://zancheng.github.io/canvas-color-disc/) or [edit and run it on StackBlitz](https://stackblitz.com/github/zancheng/canvas-color-disc).
 
 ```html
-<!-- unpkg, pinned to the current version (drop @1.4.0 to always get the latest):
-     https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js
+<!-- unpkg, pinned to the current version (drop @1.4.1 to always get the latest):
+     https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js
      jsDelivr mirror (identical file, same version):
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js -->
-<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js"></script>
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js -->
+<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js"></script>
 
 <canvas-color-disc width="300" height="300"></canvas-color-disc>
 
@@ -51,7 +51,7 @@ Prefer to try it first? Open the [live demo](https://zancheng.github.io/canvas-c
 </script>
 ```
 
-Both CDNs also resolve the bare package URL — `https://unpkg.com/canvas-color-disc@1.4.0` and `https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0` — straight to that UMD file, thanks to the `unpkg` / `jsdelivr` fields in package.json.
+Both CDNs also resolve the bare package URL — `https://unpkg.com/canvas-color-disc@1.4.1` and `https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1` — straight to that UMD file, thanks to the `unpkg` / `jsdelivr` fields in package.json.
 
 ### React
 
@@ -178,13 +178,13 @@ The component is registered as `CanvasColorDisc`, use it as `<canvas-color-disc 
 ### Use via CDN (Vue 2 / Vue 3 UMD)
 
 ```html
-<!-- unpkg, pinned to the current version (drop @1.4.0 to always get the latest);
+<!-- unpkg, pinned to the current version (drop @1.4.1 to always get the latest);
      for the jsDelivr mirror replace the origin and keep the same version:
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/style.css
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/canvas-color-disc.umd.js -->
-<link rel="stylesheet" href="https://unpkg.com/canvas-color-disc@1.4.0/dist/style.css">
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/style.css
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/canvas-color-disc.umd.js -->
+<link rel="stylesheet" href="https://unpkg.com/canvas-color-disc@1.4.1/dist/style.css">
 <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
-<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/canvas-color-disc.umd.js"></script>
+<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/canvas-color-disc.umd.js"></script>
 
 <script>
     // Without Vue.use, it can also be used directly as a component option

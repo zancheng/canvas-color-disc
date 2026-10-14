@@ -13,7 +13,7 @@
 
 | 环境 | 引入 | 用法 | 样式 |
 | --- | --- | --- | --- |
-| 纯 HTML | `<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js">` | 写 `<canvas-color-disc>` 标签，监听 `change` 事件 | 自动注入，无需引入 |
+| 纯 HTML | `<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js">` | 写 `<canvas-color-disc>` 标签，监听 `change` 事件 | 自动注入，无需引入 |
 | React | `import 'canvas-color-disc/vanilla'` | 同上；React 19 直接写 JSX 属性与 `onchange`，React 18 用 `ref` 桥接 | 自动注入，无需引入 |
 | Vue 2（`^2.5.0`） | `import CanvasColorDisc from 'canvas-color-disc/vue2'` | `v-model`：`value` / `input` | `canvas-color-disc/dist/style.css` |
 | Vue 3（`^3.0.0`） | `import CanvasColorDisc from 'canvas-color-disc'`（或 `canvas-color-disc/vue3`） | `v-model`：`modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
@@ -36,11 +36,11 @@ Vue 2 与 Vue 3 产物来自同一份源码（`src/components/CanvasColorDisc.vu
 想先试试效果？打开[在线演示](https://zancheng.github.io/canvas-color-disc/)，或在 [StackBlitz 上边改边跑](https://stackblitz.com/github/zancheng/canvas-color-disc)。
 
 ```html
-<!-- unpkg，锁定当前版本（去掉 @1.4.0 即始终加载最新版）：
-     https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js
+<!-- unpkg，锁定当前版本（去掉 @1.4.1 即始终加载最新版）：
+     https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js
      jsDelivr 镜像（同一文件、同一版本）：
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js -->
-<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/vanilla/canvas-color-disc.umd.js"></script>
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js -->
+<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/vanilla/canvas-color-disc.umd.js"></script>
 
 <canvas-color-disc width="300" height="300"></canvas-color-disc>
 
@@ -50,7 +50,7 @@ Vue 2 与 Vue 3 产物来自同一份源码（`src/components/CanvasColorDisc.vu
 </script>
 ```
 
-两个 CDN 也支持无路径的裸包地址——`https://unpkg.com/canvas-color-disc@1.4.0` 与 `https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0` 均直接指向该 UMD 文件（由 package.json 中的 `unpkg` / `jsdelivr` 字段指定）。
+两个 CDN 也支持无路径的裸包地址——`https://unpkg.com/canvas-color-disc@1.4.1` 与 `https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1` 均直接指向该 UMD 文件（由 package.json 中的 `unpkg` / `jsdelivr` 字段指定）。
 
 ### React
 
@@ -177,12 +177,12 @@ export default {
 ### 浏览器直接引入（Vue 版 UMD）
 
 ```html
-<!-- unpkg，锁定当前版本（去掉 @1.4.0 即始终加载最新版）；jsDelivr 镜像只需替换源前缀，版本保持一致：
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/style.css
-     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.0/dist/canvas-color-disc.umd.js -->
-<link rel="stylesheet" href="https://unpkg.com/canvas-color-disc@1.4.0/dist/style.css">
+<!-- unpkg，锁定当前版本（去掉 @1.4.1 即始终加载最新版）；jsDelivr 镜像只需替换源前缀，版本保持一致：
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/style.css
+     https://cdn.jsdelivr.net/npm/canvas-color-disc@1.4.1/dist/canvas-color-disc.umd.js -->
+<link rel="stylesheet" href="https://unpkg.com/canvas-color-disc@1.4.1/dist/style.css">
 <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
-<script src="https://unpkg.com/canvas-color-disc@1.4.0/dist/canvas-color-disc.umd.js"></script>
+<script src="https://unpkg.com/canvas-color-disc@1.4.1/dist/canvas-color-disc.umd.js"></script>
 
 <script>
     // 未调用 Vue.use 时，也可直接作为组件选项使用
