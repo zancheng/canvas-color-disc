@@ -2,18 +2,114 @@
 
 # canvas-color-disc
 
-> A circular color picker built with Vue + Canvas, works on both desktop and mobile (Pointer Events). Supports Vue 2 and Vue 3.
+> A circular color picker built on Canvas, works on both desktop and mobile (Pointer Events). Available as a Vue 2 / Vue 3 component and as a framework-agnostic Web Component / vanilla JS class.
 
-![avatar](https://udfs.unisiot.com/group1/M00/03/85/rBEBA2FqlXOAfw1hAAECEWBl9Kc837.png)
+![preview](https://cdn.jsdelivr.net/gh/zancheng/canvas-color-disc@main/preview.png)
 
-## Vue version support
+## Usage at a glance
 
-| Vue version | Import path | v-model prop / event | Style |
+| Setup | Import | Usage | Styles |
 | --- | --- | --- | --- |
-| Vue 2 (`^2.5.0`) | `canvas-color-disc` (or `canvas-color-disc/vue2`) | `value` / `input` | `canvas-color-disc/dist/style.css` |
-| Vue 3 (`^3.0.0`) | `canvas-color-disc/vue3` | `modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
+| Plain HTML | `<script src="https://unpkg.com/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js">` | Render `<canvas-color-disc>` and listen for the `change` event | auto-injected, no CSS import |
+| React | `import 'canvas-color-disc/vanilla'` | Same element; JSX props and `onchange` on React 19, a `ref` bridge on React 18 | auto-injected, no CSS import |
+| Vue 2 (`^2.5.0`) | `import CanvasColorDisc from 'canvas-color-disc/vue2'` | `v-model`: `value` / `input` | `canvas-color-disc/dist/style.css` |
+| Vue 3 (`^3.0.0`) | `import CanvasColorDisc from 'canvas-color-disc'` (or `canvas-color-disc/vue3`) | `v-model`: `modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
 
-Both builds come from the same source (`src/components/CanvasColorDisc.vue`); only the SFC compile target differs. The default entry `.` stays on the Vue 2 build for backward compatibility.
+Full examples live below in "Framework-agnostic build" (plain HTML / React) and "Import" (Vue 2 / Vue 3).
+Both Vue builds come from the same source (`src/components/CanvasColorDisc.vue`); only the SFC compile target differs. The default entry `.` is the Vue 3 build; Vue 2 projects import `canvas-color-disc/vue2` and non-Vue projects import `canvas-color-disc/vanilla`.
+
+## Framework-agnostic build (Web Component / vanilla JS)
+
+A standalone build without Vue: `CanvasColorDiscCore` (vanilla JS class) + `<canvas-color-disc>` (Web Component).
+The element registers itself on import and carries its styles through Shadow DOM, so no extra CSS import is needed.
+Works in plain HTML, React, Angular and anything else.
+
+| How to import | Path | Notes |
+| --- | --- | --- |
+| ES module | `canvas-color-disc/vanilla` | for non-Vue projects (React / Svelte / any bundler) |
+| Script tag (UMD) | `dist/vanilla/canvas-color-disc.umd.js` | global `window.CanvasColorDisc`, auto-registers `<canvas-color-disc>`, zero dependencies |
+
+### Plain HTML
+
+```html
+<!-- unpkg; swap for the jsDelivr mirror if you prefer:
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js -->
+<script src="https://unpkg.com/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js"></script>
+
+<canvas-color-disc width="300" height="300"></canvas-color-disc>
+
+<script>
+    const disc = document.querySelector('canvas-color-disc')
+    disc.addEventListener('change', (event) => console.log(event.detail))
+</script>
+```
+
+### React
+
+React 19 supports custom elements natively, so attributes and events can be passed directly:
+
+```jsx
+import 'canvas-color-disc/vanilla' // registers <canvas-color-disc>
+
+function ColorPicker() {
+    return (
+        <canvas-color-disc
+            format="hex"
+            width="300"
+            height="300"
+            onchange={(event) => console.log(event.detail)}
+        />
+    )
+}
+```
+
+React 18 and below need a `ref` to bridge properties and events:
+
+```jsx
+import { useEffect, useRef } from 'react'
+import 'canvas-color-disc/vanilla'
+
+function ColorPicker({ color, onChange }) {
+    const ref = useRef(null)
+
+    useEffect(() => {
+        const el = ref.current
+        const handleChange = (event) => onChange(event.detail)
+        el.addEventListener('change', handleChange)
+        return () => el.removeEventListener('change', handleChange)
+    }, [onChange])
+
+    // object values must be set through the property (attributes only hold strings)
+    useEffect(() => {
+        ref.current.value = color
+    }, [color])
+
+    return <canvas-color-disc ref={ref} format="rgb" width="300" height="300"></canvas-color-disc>
+}
+```
+
+For TSX projects, declare the tag in `JSX.IntrinsicElements` to make the type checker happy.
+
+A complete runnable demo lives in [demo/react](demo/react): run `npm run dev:react` and open localhost:5175; the left picker uses the React 19 native API and the right one the ref bridge.
+
+### Imperative (vanilla JS)
+
+```js
+import { CanvasColorDiscCore } from 'canvas-color-disc/vanilla'
+
+const disc = new CanvasColorDiscCore('#app', { value: { r: 255, g: 0, b: 0 } })
+
+disc.addEventListener('change', (event) => console.log(event.detail))
+disc.setColor({ r: 0, g: 0, b: 255 })
+```
+
+### Options, events and methods
+
+Options match the Vue version: `value` / `width` / `height` / `format` / `alpha` / `disabled` / `keyboardStep`
+(the attribute is `keyboard-step`; object values can only be set through the property).
+`input` / `change` bubble and pierce the shadow boundary with `event.detail` as the current color.
+Instance methods: `getColor()` / `setColor(value)` / `reset()` / `setOptions(options)` / `destroy()`.
+Extra content such as preset swatches goes inside `<canvas-color-disc>` with `slot="palette"`.
 
 ## Install
 
@@ -35,7 +131,7 @@ The package exports the component itself with an `install` method attached, so b
 
 ```js
 import Vue from 'vue'
-import CanvasColorDisc from 'canvas-color-disc'
+import CanvasColorDisc from 'canvas-color-disc/vue2'
 import 'canvas-color-disc/dist/style.css'
 
 Vue.use(CanvasColorDisc)
@@ -45,7 +141,7 @@ Vue.use(CanvasColorDisc)
 
 ```js
 import { createApp } from 'vue'
-import CanvasColorDisc from 'canvas-color-disc/vue3'
+import CanvasColorDisc from 'canvas-color-disc'
 import 'canvas-color-disc/vue3/style.css'
 import App from './App.vue'
 
@@ -56,11 +152,11 @@ createApp(App).use(CanvasColorDisc).mount('#app')
 
 ```js
 // Vue 2
-import CanvasColorDisc from 'canvas-color-disc'
+import CanvasColorDisc from 'canvas-color-disc/vue2'
 import 'canvas-color-disc/dist/style.css'
 
 // Vue 3
-import CanvasColorDisc from 'canvas-color-disc/vue3'
+import CanvasColorDisc from 'canvas-color-disc'
 import 'canvas-color-disc/vue3/style.css'
 
 export default {
@@ -70,12 +166,15 @@ export default {
 
 The component is registered as `CanvasColorDisc`, use it as `<canvas-color-disc />` in templates.
 
-### Use via CDN (UMD)
+### Use via CDN (Vue 2 / Vue 3 UMD)
 
 ```html
+<!-- unpkg; swap both files for the jsDelivr mirror if you prefer:
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/style.css
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/canvas-color-disc.umd.js -->
 <link rel="stylesheet" href="https://unpkg.com/canvas-color-disc/dist/style.css">
 <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
-<script src="https://unpkg.com/canvas-color-disc"></script>
+<script src="https://unpkg.com/canvas-color-disc/dist/canvas-color-disc.umd.js"></script>
 
 <script>
     // Without Vue.use, it can also be used directly as a component option
@@ -211,7 +310,7 @@ The interactive element is focusable (`tabindex="0"`, `role="slider"` with `aria
 - Passing `'auto'` for `width` / `height` makes the canvas follow its container and redraw on container resizes; the parent needs a definite size on that axis
 - When `devicePixelRatio` changes (dragging the window to another screen, changing the OS scaling), the canvas is rebuilt at the new ratio
 - Disc pixels are cached by geometry, so nothing is recomputed while size and dpr stay the same; the circumference fades over one physical pixel to avoid aliasing
-- Styles are shipped as plain CSS scoped by the `.canvas-color-disc` ancestor selector; import the matching `style.css` once per app
+- Styles for the Vue build are shipped as plain CSS scoped by the `.canvas-color-disc` ancestor selector; import the matching `style.css` once per app. The framework-agnostic build injects its styles automatically, no import needed
 - `src/index.d.ts` ships with the package, so TS projects get prop and instance method types out of the box
 
 ## Local development
@@ -226,12 +325,16 @@ npm run dev
 # serve the Vue 3 demo at localhost:5174
 npm run dev:vue3
 
-# build both Vue 2 (dist/) and Vue 3 (dist/vue3/) bundles
+# serve the React demo at localhost:5175
+npm run dev:react
+
+# build Vue 2 (dist/), Vue 3 (dist/vue3/) and framework-agnostic (dist/vanilla/) bundles
 npm run build
 
 # build a single target
 npm run build:vue2
 npm run build:vue3
+npm run build:vanilla
 
 # run the unit tests
 npm test

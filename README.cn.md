@@ -2,18 +2,113 @@
 
 # canvas-color-disc
 
-> 基于 Vue + Canvas 的圆形色盘取色组件，支持 PC 与移动端（Pointer Events），同时支持 Vue 2 与 Vue 3
+> 基于 Canvas 的圆形色盘取色组件，支持 PC 与移动端（Pointer Events）；同时提供 Vue 2 / Vue 3 组件与框架无关的 Web Component / 纯 JS 版本
 
-![avatar](https://udfs.unisiot.com/group1/M00/03/85/rBEBA2FqlXOAfw1hAAECEWBl9Kc837.png)
+![预览](https://cdn.jsdelivr.net/gh/zancheng/canvas-color-disc@main/preview.png)
 
-## Vue 版本支持
+## 使用方式速查
 
-| Vue 版本 | 引入路径 | v-model 的 prop / 事件 | 样式 |
+| 环境 | 引入 | 用法 | 样式 |
 | --- | --- | --- | --- |
-| Vue 2（`^2.5.0`） | `canvas-color-disc`（或 `canvas-color-disc/vue2`） | `value` / `input` | `canvas-color-disc/dist/style.css` |
-| Vue 3（`^3.0.0`） | `canvas-color-disc/vue3` | `modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
+| 纯 HTML | `<script src="https://unpkg.com/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js">` | 写 `<canvas-color-disc>` 标签，监听 `change` 事件 | 自动注入，无需引入 |
+| React | `import 'canvas-color-disc/vanilla'` | 同上；React 19 直接写 JSX 属性与 `onchange`，React 18 用 `ref` 桥接 | 自动注入，无需引入 |
+| Vue 2（`^2.5.0`） | `import CanvasColorDisc from 'canvas-color-disc/vue2'` | `v-model`：`value` / `input` | `canvas-color-disc/dist/style.css` |
+| Vue 3（`^3.0.0`） | `import CanvasColorDisc from 'canvas-color-disc'`（或 `canvas-color-disc/vue3`） | `v-model`：`modelValue` / `update:modelValue` | `canvas-color-disc/vue3/style.css` |
 
-两份产物来自同一份源码（`src/components/CanvasColorDisc.vue`），只是 SFC 编译目标不同；默认入口 `.` 保持为 Vue 2 构建以兼容旧版本。
+完整示例见下方「框架无关版本」（纯 HTML / React）与「引入」（Vue 2 / Vue 3）章节。
+Vue 2 与 Vue 3 产物来自同一份源码（`src/components/CanvasColorDisc.vue`），只是 SFC 编译目标不同；默认入口 `.` 为 Vue 3 构建，Vue 2 请引入 `canvas-color-disc/vue2`，非 Vue 工程请引入 `canvas-color-disc/vanilla`。
+
+## 框架无关版本（Web Component / 纯 JS）
+
+不依赖 Vue 的独立构建：`CanvasColorDiscCore`（纯 JS 核心）+ `<canvas-color-disc>`（Web Component）。
+引入即自动注册标签，样式通过 Shadow DOM 注入（无需再引入 CSS），HTML / React / Vue / Angular 等任意环境通用。
+
+| 引入方式 | 路径 | 说明 |
+| --- | --- | --- |
+| ES 模块 | `canvas-color-disc/vanilla` | 非 Vue 工程（React / Svelte / 原生打包环境）使用 |
+| 浏览器直接引入（UMD） | `dist/vanilla/canvas-color-disc.umd.js` | 全局变量 `window.CanvasColorDisc`，自动注册 `<canvas-color-disc>`，零依赖 |
+
+### 纯 HTML
+
+```html
+<!-- unpkg；也可换成等价的 jsDelivr 镜像：
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js -->
+<script src="https://unpkg.com/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js"></script>
+
+<canvas-color-disc width="300" height="300"></canvas-color-disc>
+
+<script>
+    const disc = document.querySelector('canvas-color-disc')
+    disc.addEventListener('change', (event) => console.log(event.detail))
+</script>
+```
+
+### React
+
+React 19 原生支持自定义元素，属性与事件直接写：
+
+```jsx
+import 'canvas-color-disc/vanilla' // 引入即注册 <canvas-color-disc>
+
+function ColorPicker() {
+    return (
+        <canvas-color-disc
+            format="hex"
+            width="300"
+            height="300"
+            onchange={(event) => console.log(event.detail)}
+        />
+    )
+}
+```
+
+React 18 及以下用 `ref` 桥接属性与事件：
+
+```jsx
+import { useEffect, useRef } from 'react'
+import 'canvas-color-disc/vanilla'
+
+function ColorPicker({ color, onChange }) {
+    const ref = useRef(null)
+
+    useEffect(() => {
+        const el = ref.current
+        const handleChange = (event) => onChange(event.detail)
+        el.addEventListener('change', handleChange)
+        return () => el.removeEventListener('change', handleChange)
+    }, [onChange])
+
+    // 对象值通过 property 传入（attribute 只支持字符串）
+    useEffect(() => {
+        ref.current.value = color
+    }, [color])
+
+    return <canvas-color-disc ref={ref} format="rgb" width="300" height="300"></canvas-color-disc>
+}
+```
+
+TSX 项目如需通过类型检查，为该标签补充 `JSX.IntrinsicElements` 声明即可。
+
+完整可运行示例见 [demo/react](demo/react)：`npm run dev:react` 后访问 localhost:5175，左右两个色盘分别演示上述两种写法。
+
+### 命令式（纯 JS）
+
+```js
+import { CanvasColorDiscCore } from 'canvas-color-disc/vanilla'
+
+const disc = new CanvasColorDiscCore('#app', { value: { r: 255, g: 0, b: 0 } })
+
+disc.addEventListener('change', (event) => console.log(event.detail))
+disc.setColor({ r: 0, g: 0, b: 255 })
+```
+
+### 选项、事件与方法
+
+选项与 Vue 版一致：`value` / `width` / `height` / `format` / `alpha` / `disabled` / `keyboardStep`
+（attribute 名为 `keyboard-step`；`value` 为对象时只能通过 property 设置）。
+事件 `input` / `change` 冒泡且穿透影子树，`event.detail` 为当前颜色；
+实例方法：`getColor()` / `setColor(value)` / `reset()` / `setOptions(options)` / `destroy()`。
+预设色板等附加内容写在 `<canvas-color-disc>` 内部并加 `slot="palette"`。
 
 ## 安装
 
@@ -35,7 +130,7 @@ yarn add canvas-color-disc
 
 ```js
 import Vue from 'vue'
-import CanvasColorDisc from 'canvas-color-disc'
+import CanvasColorDisc from 'canvas-color-disc/vue2'
 import 'canvas-color-disc/dist/style.css'
 
 Vue.use(CanvasColorDisc)
@@ -45,7 +140,7 @@ Vue.use(CanvasColorDisc)
 
 ```js
 import { createApp } from 'vue'
-import CanvasColorDisc from 'canvas-color-disc/vue3'
+import CanvasColorDisc from 'canvas-color-disc'
 import 'canvas-color-disc/vue3/style.css'
 import App from './App.vue'
 
@@ -56,11 +151,11 @@ createApp(App).use(CanvasColorDisc).mount('#app')
 
 ```js
 // Vue 2
-import CanvasColorDisc from 'canvas-color-disc'
+import CanvasColorDisc from 'canvas-color-disc/vue2'
 import 'canvas-color-disc/dist/style.css'
 
 // Vue 3
-import CanvasColorDisc from 'canvas-color-disc/vue3'
+import CanvasColorDisc from 'canvas-color-disc'
 import 'canvas-color-disc/vue3/style.css'
 
 export default {
@@ -70,12 +165,15 @@ export default {
 
 注册后组件名为 `CanvasColorDisc`，模板中可使用 `<canvas-color-disc />`。
 
-### 浏览器直接引入（UMD）
+### 浏览器直接引入（Vue 版 UMD）
 
 ```html
+<!-- unpkg；也可换成等价的 jsDelivr 镜像（样式与脚本两处都换）：
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/style.css
+     https://cdn.jsdelivr.net/npm/canvas-color-disc/dist/canvas-color-disc.umd.js -->
 <link rel="stylesheet" href="https://unpkg.com/canvas-color-disc/dist/style.css">
 <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
-<script src="https://unpkg.com/canvas-color-disc"></script>
+<script src="https://unpkg.com/canvas-color-disc/dist/canvas-color-disc.umd.js"></script>
 
 <script>
     // 未调用 Vue.use 时，也可直接作为组件选项使用
@@ -211,7 +309,7 @@ export default {
 - `width`/`height` 传 `'auto'` 时画布尺寸跟随容器，容器尺寸变化会自动重绘；该方向需要父容器有确定尺寸
 - `devicePixelRatio` 变化（跨屏拖动窗口、修改系统缩放）时会自动按新比例重建画布
 - 色盘像素按几何参数缓存，尺寸与 dpr 未变时不会重算；圆周做 1 物理像素的透明度渐变，避免锯齿
-- 样式为普通 CSS，通过 `.canvas-color-disc` 后代选择器限定作用域，每个应用引入一次对应版本的 `style.css` 即可
+- Vue 版的样式为普通 CSS，通过 `.canvas-color-disc` 后代选择器限定作用域，每个应用引入一次对应版本的 `style.css` 即可；框架无关版本的样式随 JS 自动注入，无需引入
 - 包内附带 `src/index.d.ts`，TS 项目可直接获得 props 与实例方法的类型
 
 ## 本地开发
@@ -226,12 +324,16 @@ npm run dev
 # 启动 Vue 3 demo（localhost:5174）
 npm run dev:vue3
 
-# 同时构建 Vue 2（dist/）与 Vue 3（dist/vue3/）产物
+# 启动 React demo（localhost:5175）
+npm run dev:react
+
+# 同时构建 Vue 2（dist/）、Vue 3（dist/vue3/）与框架无关（dist/vanilla/）产物
 npm run build
 
 # 单独构建某一版本
 npm run build:vue2
 npm run build:vue3
+npm run build:vanilla
 
 # 运行单元测试
 npm test

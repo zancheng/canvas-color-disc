@@ -1,16 +1,16 @@
 {
   "name": "canvas-color-disc",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Color disc realized by canvas",
   "private": false,
-  "main": "dist/canvas-color-disc.umd.js",
-  "module": "dist/canvas-color-disc.es.js",
+  "main": "dist/vue3/canvas-color-disc.umd.js",
+  "module": "dist/vue3/canvas-color-disc.es.js",
   "types": "./src/index.d.ts",
   "exports": {
     ".": {
       "types": "./src/index.d.ts",
-      "import": "./dist/canvas-color-disc.es.js",
-      "require": "./dist/canvas-color-disc.umd.js"
+      "import": "./dist/vue3/canvas-color-disc.es.js",
+      "require": "./dist/vue3/canvas-color-disc.umd.js"
     },
     "./vue2": {
       "types": "./src/index.d.ts",
@@ -22,27 +22,36 @@
       "import": "./dist/vue3/canvas-color-disc.es.js",
       "require": "./dist/vue3/canvas-color-disc.umd.js"
     },
+    "./vanilla": {
+      "types": "./src/vanilla.d.ts",
+      "import": "./dist/vanilla/canvas-color-disc.es.js",
+      "require": "./dist/vanilla/canvas-color-disc.umd.js"
+    },
     "./package.json": "./package.json",
     "./dist/style.css": "./dist/style.css",
     "./vue2/style.css": "./dist/style.css",
     "./dist/vue3/style.css": "./dist/vue3/style.css",
     "./vue3/style.css": "./dist/vue3/style.css"
   },
-  "style": "dist/style.css",
+  "style": "dist/vue3/style.css",
   "files": [
     "dist",
     "src"
   ],
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "./dist/vanilla/**",
+    "./src/vanilla.js"
   ],
   "scripts": {
     "dev": "vite",
     "dev:vue3": "vite --config vite.config.demo3.js",
+    "dev:react": "vite --config vite.config.react.js",
     "start": "vite",
-    "build": "npm run build:vue2 && npm run build:vue3",
+    "build": "npm run build:vue2 && npm run build:vue3 && npm run build:vanilla",
     "build:vue2": "vite build",
     "build:vue3": "vite build --config vite.config.vue3.js",
+    "build:vanilla": "vite build --config vite.config.vanilla.js",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue src demo test config",
     "lintfix": "eslint --fix --ext .js,.vue src demo test config",
@@ -64,11 +73,14 @@
     "vue": "^2.5.0 || ^3.0.0"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
     "@vitejs/plugin-vue2": "^2.3.1",
     "@vue/compiler-sfc": "^3.5.13",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.33.0",
     "jsdom": "^30.1.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "vite": "^5.4.0",
     "vitest": "^2.1.8",
     "vue": "2.7.16",
