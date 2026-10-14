@@ -30,7 +30,7 @@
     <p>
         本页面没有引入 Vue，也没有任何构建步骤：一个 script 标签即注册
         <code>&lt;canvas-color-disc&gt;</code>，样式随 JS 自动注入。
-        运行前先执行 <code>npm run build:vanilla</code> 生成 dist 产物。
+        脚本经 unpkg CDN 引入已发布版本，打开即可交互试用。
     </p>
 
     <div class="row">
@@ -59,7 +59,9 @@
         </div>
     </div>
 
-    <script src="../../dist/vanilla/canvas-color-disc.umd.js"></script>
+    <!-- 在线演示走 unpkg CDN（未锁定版本，跟随最新发布）；本地调试验证构建产物时，
+         可换回 ../../dist/vanilla/canvas-color-disc.umd.js -->
+    <script src="https://unpkg.com/canvas-color-disc/dist/vanilla/canvas-color-disc.umd.js"></script>
     <script>
         var defaultDisc = document.querySelector('canvas-color-disc');
         var hexDisc = document.querySelector('canvas-color-disc[format="hex"]');
@@ -88,6 +90,11 @@
             document.getElementById('out-plain').textContent = JSON.stringify(event.detail);
         });
     </script>
+
+    <p style="margin-top: 32px; color: #888">
+        项目主页：<a href="https://github.com/zancheng/canvas-color-disc">GitHub</a> ·
+        <a href="https://www.npmjs.com/package/canvas-color-disc">npm</a>
+    </p>
 </body>
 
 </html>

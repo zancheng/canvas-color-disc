@@ -2,6 +2,12 @@
 
 本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 格式，版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased]
+
+### 新增
+
+- 在线试用入口：`demo/vanilla` 页面改为经 CDN 引入的自包含单页，通过 GitHub Pages 部署为在线演示（Live Demo），并新增 StackBlitz 在线编辑器入口；README 顶部加入对应徽章
+
 ## [1.4.0] - 2026-10-14
 
 ### 新增

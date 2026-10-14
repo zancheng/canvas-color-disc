@@ -4,6 +4,9 @@
 
 > 基于 Canvas 的圆形色盘取色组件，支持 PC 与移动端（Pointer Events）；同时提供 Vue 2 / Vue 3 组件与框架无关的 Web Component / 纯 JS 版本
 
+[![在线演示](https://img.shields.io/badge/Live%20Demo-online-2ea44f?logo=githubpages&logoColor=white)](https://zancheng.github.io/canvas-color-disc/)
+[![StackBlitz 在线编辑](https://img.shields.io/badge/StackBlitz-Open%20in%20editor-1389FD?logo=stackblitz&logoColor=white)](https://stackblitz.com/github/zancheng/canvas-color-disc)
+
 ![预览](https://cdn.jsdelivr.net/gh/zancheng/canvas-color-disc@main/preview.png)
 
 ## 使用方式速查
@@ -29,6 +32,8 @@ Vue 2 与 Vue 3 产物来自同一份源码（`src/components/CanvasColorDisc.vu
 | 浏览器直接引入（UMD） | `dist/vanilla/canvas-color-disc.umd.js` | 全局变量 `window.CanvasColorDisc`，自动注册 `<canvas-color-disc>`，零依赖 |
 
 ### 纯 HTML
+
+想先试试效果？打开[在线演示](https://zancheng.github.io/canvas-color-disc/)，或在 [StackBlitz 上边改边跑](https://stackblitz.com/github/zancheng/canvas-color-disc)。
 
 ```html
 <!-- unpkg，锁定当前版本（去掉 @1.4.0 即始终加载最新版）：
