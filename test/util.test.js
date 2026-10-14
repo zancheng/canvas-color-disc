@@ -131,12 +131,22 @@ describe('drawColorDisc', () => {
         expect(pixelAt(image, edgeX - 1, 100).a).toBe(255);
     });
 
-    // 色相关于水平轴对称：镜像复制优化必须与逐像素计算结果一致
-    it('上下半区关于圆心水平行对称', () => {
+    // 色相沿逆时针递增：右 0° 红、上 90° 黄绿、左 180° 青、下 270° 紫。
+    // HSV 色轮上下并不对称，下半区不能整行镜像复制，必须逐像素计算
+    it('下半区按真实色相渲染：正下方为紫色', () => {
         const image = render();
-        for (let offset = 1; offset <= 80; offset += 7) {
-            expect(pixelAt(image, 120, 100 + offset)).toEqual(pixelAt(image, 120, 100 - offset));
-        }
+        const right = pixelAt(image, 180, 100);
+        expect(right.r).toBeGreaterThan(right.g);
+        expect(right.g).toBe(right.b);
+        const top = pixelAt(image, 100, 20);
+        expect(top.g).toBeGreaterThan(top.r);
+        expect(top.g).toBeGreaterThan(top.b);
+        const left = pixelAt(image, 20, 100);
+        expect(left.b).toBeGreaterThan(left.r);
+        expect(left.g).toBeGreaterThan(left.r);
+        const bottom = pixelAt(image, 100, 180);
+        expect(bottom.b).toBeGreaterThan(bottom.r);
+        expect(bottom.r).toBeGreaterThan(bottom.g);
     });
 
     it('几何参数不变时复用缓存，结果一致', () => {
