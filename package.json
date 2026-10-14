@@ -1,6 +1,6 @@
 {
   "name": "canvas-color-disc",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Color disc realized by canvas",
   "private": false,
   "main": "dist/vue3/canvas-color-disc.umd.js",
