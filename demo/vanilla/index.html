@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>canvas-color-disc 纯 HTML demo</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 24px;
+        }
+
+        .row {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        code {
+            background: #f2f2f2;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>canvas-color-disc（无框架直接使用）</h1>
+    <p>
+        本页面没有引入 Vue，也没有任何构建步骤：一个 script 标签即注册
+        <code>&lt;canvas-color-disc&gt;</code>，样式随 JS 自动注入。
+        运行前先执行 <code>npm run build:vanilla</code> 生成 dist 产物。
+    </p>
+
+    <div class="row">
+        <div>
+            <h3>默认（rgb）</h3>
+            <canvas-color-disc></canvas-color-disc>
+            <p>change：<output id="out-default">-</output></p>
+        </div>
+
+        <div>
+            <h3>hex + alpha + palette 插槽</h3>
+            <canvas-color-disc format="hex" alpha width="220" height="220">
+                <span slot="palette">
+                    <button type="button" data-color="#ff0000">红</button>
+                    <button type="button" data-color="#00ff00">绿</button>
+                    <button type="button" data-color="#0000ff">蓝</button>
+                </span>
+            </canvas-color-disc>
+            <p>change：<output id="out-hex">-</output></p>
+        </div>
+
+        <div>
+            <h3>命令式挂载（CanvasColorDiscCore）</h3>
+            <div id="plain-host"></div>
+            <p>change：<output id="out-plain">-</output></p>
+        </div>
+    </div>
+
+    <script src="../../dist/vanilla/canvas-color-disc.umd.js"></script>
+    <script>
+        var defaultDisc = document.querySelector('canvas-color-disc');
+        var hexDisc = document.querySelector('canvas-color-disc[format="hex"]');
+
+        defaultDisc.addEventListener('change', function(event) {
+            var c = event.detail;
+            document.getElementById('out-default').textContent = c.r + ', ' + c.g + ', ' + c.b;
+        });
+
+        hexDisc.addEventListener('change', function(event) {
+            document.getElementById('out-hex').textContent = String(event.detail);
+        });
+
+        // palette 插槽内的按钮通过 setColor 回写颜色
+        hexDisc.querySelectorAll('button[data-color]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                hexDisc.setColor(button.dataset.color);
+            });
+        });
+
+        // 不使用自定义元素时，也可以直接命令式挂载
+        var plain = new CanvasColorDisc.CanvasColorDiscCore('#plain-host', {
+            value: { r: 64, g: 158, b: 255 }
+        });
+        plain.addEventListener('change', function(event) {
+            document.getElementById('out-plain').textContent = JSON.stringify(event.detail);
+        });
+    </script>
+</body>
+
+</html>
